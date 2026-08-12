@@ -43,28 +43,204 @@ cd Calander_bot
 pip install -r requirements.txt
 ```
 
-**2. Create a Telegram bot**
-Message [@BotFather](https://t.me/BotFather) on Telegram, run `/newbot`, and save the token it gives you.
+# CalPal — Telegram Bot for Google Calendar
 
-**3. Set up Google Calendar access**
-- In [Google Cloud Console](https://console.cloud.google.com/), create a project, enable the **Google Calendar API**, and create an OAuth 2.0 Client ID (Desktop app type). Download it as `credentials.json` into this folder.
-- Run `python get_token.py` — it opens a browser for you to sign in and grants calendar access, then saves `token.json`.
+CalPal is a Telegram bot that turns casual messages into Google Calendar events using Google's Gemini AI.
 
-**4. Set environment variables**
+## 📋 What You'll Need
+
+- A Windows / macOS / Linux computer
+- A Google account (for Calendar & Gemini)
+- A Telegram account (for the bot)
+- About 15 minutes of your time
+
+---
+
+## 🧰 Step 1 — Install Python
+
+1. Go to [python.org/downloads](https://www.python.org/downloads/)
+2. Download the latest Python 3.11 or 3.12 installer.
+3. Run the installer.
+   - ✅ Check the box **"Add Python to PATH"**
+   - ✅ Make sure **"pip"** is selected
+4. Finish the installation.
+
+To verify, open a terminal (Command Prompt or PowerShell) and type:
+
 ```bash
-export TELEGRAM_TOKEN="your-telegram-bot-token"
-export GEMINI_API_KEY="your-gemini-api-key"     # only needed for bot.py
+python --version
 ```
 
-**5. Run it**
+You should see something like `Python 3.12.x`.
+
+---
+
+## 📥 Step 2 — Download the Bot Code
+
+1. Go to the GitHub repo: [github.com/omg-o/calander_bot](https://github.com/omg-o/calander_bot)
+2. Click the green **"Code"** button → **Download ZIP**.
+3. Extract the ZIP file to a folder, e.g. `C:\Users\YourName\Desktop\calander_bot`.
+4. Open that folder.
+
+---
+
+## 🖥️ Step 3 — Open the Project in VS Code (Recommended)
+
+1. If you don't have VS Code, download it from [code.visualstudio.com](https://code.visualstudio.com/).
+2. Open VS Code.
+3. Click **File → Open Folder…** → select the `calander_bot` folder.
+4. Inside VS Code, open a new terminal: **Terminal → New Terminal** (or press `` Ctrl + ` ``).
+
+---
+
+## 🐍 Step 4 — Create a Virtual Environment
+
+In the VS Code terminal:
+
 ```bash
-python bot.py            # cloud (Gemini)
-# or
-python bot_local.py      # local (Ollama) — requires: ollama pull qwen3:8b
+python -m venv .venv
 ```
 
-`credentials.json` and `token.json` contain real credentials and are excluded via `.gitignore` — never commit them.
+Activate it:
 
+**Windows (PowerShell / CMD):**
+```bash
+.venv\Scripts\activate
+```
+
+**macOS / Linux:**
+```bash
+source .venv/bin/activate
+```
+
+Your terminal prompt should now start with `(.venv)`.
+
+---
+
+## 📦 Step 5 — Install Dependencies
+
+Make sure you're in the `calander_bot` folder (the one with `requirements.txt`), then run:
+
+```bash
+pip install -r requirements.txt
+```
+
+Wait for everything to install — you'll see a **"Successfully installed …"** message.
+
+---
+
+## 🔑 Step 6 — Get Your Telegram Bot Token
+
+1. Open Telegram and search for **[BotFather](https://t.me/BotFather)**.
+2. Send the command `/newbot` and follow the instructions:
+   - Give your bot a name (e.g., "My CalPal")
+   - Give it a username (must end with `bot`, e.g., `mycalpal_bot`)
+3. BotFather will reply with a token that looks like:
+   ```
+   123456789:AAExampleTokenGoesHere00000000000
+   ```
+4. **Copy this token!** You'll need it soon.
+
+---
+
+## 🧠 Step 7 — Get a Gemini API Key
+
+1. Go to [Google AI Studio](https://aistudio.google.com/).
+2. Sign in with your Google account.
+3. Click **"Create API key"**.
+4. Choose **"Create API key in new project"** (or select an existing project).
+5. Copy the key — it looks like `AIza...`.
+
+> ⚠️ **Important:** You must also enable the API service:
+> 1. Visit the [Google Cloud Console](https://console.cloud.google.com/).
+> 2. Make sure the same project is selected.
+> 3. Go to **APIs & Services → Library**.
+> 4. Search for **"Generative Language API"** and click **Enable**.
+
+---
+
+## 📅 Step 8 — Enable Google Calendar API & Get OAuth Credentials
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2. Select your project (the one from the previous step).
+3. Navigate to **APIs & Services → Library**.
+4. Search for **"Google Calendar API"** → click **Enable**.
+5. Now go to **APIs & Services → Credentials**.
+6. Click **Create Credentials → OAuth client ID**.
+7. Set Application type to **"Desktop app"**, give it a name (e.g., "CalPal Bot").
+8. Click **Create**. A dialog with client ID and secret appears — click **Download JSON**.
+9. Rename the downloaded file to `credentials.json`.
+10. Move this `credentials.json` file into your `calander_bot` folder (next to `bot.py`).
+
+---
+
+## ⚙️ Step 9 — Configure Environment Variables
+
+In the `calander_bot` folder, create a new file named `.env` (exactly this, no extension).
+
+Open it and paste:
+
+```env
+TELEGRAM_TOKEN=your_telegram_bot_token_here
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+Replace the token and key with the ones you copied earlier.
+No quotes, no spaces around `=`.
+
+Save the file.
+
+> 🔒 **Security tip:** Add `.env`, `credentials.json`, and `token.json` to your `.gitignore` so you never accidentally commit your secrets to GitHub.
+
+---
+
+## 🔐 Step 10 — Authenticate Your Google Account
+
+In the VS Code terminal (with the virtual environment active), run:
+
+```bash
+python get_token.py
+```
+
+1. A browser window will open asking you to log in to your Google account.
+2. Grant calendar access.
+3. After you accept, the terminal will say **"token.json saved"**.
+
+A file `token.json` will appear in your project folder — this is your permanent calendar access.
+
+---
+
+## 🚀 Step 11 — Run the Bot!
+
+In the same terminal, run:
+
+```bash
+python bot.py
+```
+
+You should see:
+
+```
+2026-08-12 ... - Bot started. Press Ctrl+C to stop.
+```
+
+Now go to Telegram, find your bot (by its username), and start a chat.
+
+---
+
+## 📱 Step 12 — Test It
+
+Send the bot a message like:
+
+- `Interview on 15th August at 2pm`
+- `Doctor appointment tomorrow morning`
+- `Team standup every weekday at 9am`
+
+The bot will:
+
+1. Extract the details using Gemini
+2. Ask you to confirm
+3. Create the event in your Google Calendar 🎉
 ## Tech stack
 
 Python · python-telegram-bot · Google Calendar API (OAuth2) · Gemini API · Ollama (local LLM) · structured JSON extraction with schema validation
