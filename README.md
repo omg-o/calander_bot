@@ -118,7 +118,7 @@ Wait for everything to install — you'll see a **"Successfully installed …"**
    - Give it a username (must end with `bot`, e.g., `mycalpal_bot`)
 3. BotFather will reply with a token that looks like:
    ```
-   123456789:AAExampleTokenGoesHere00000000000
+   1236789:AxampleTokoesHere000000000
    ```
 4. **Copy this token!** You'll need it soon.
 
